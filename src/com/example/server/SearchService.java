@@ -18,7 +18,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class SearchService extends Service {
-	String IP = "http://yukiy.sinaapp.com";
+	String IP = "http://yukiy.sinaapp.com/ChatServer";
 	int Port = 5123;;
 	DataInputStream in;
 	DataOutputStream out;

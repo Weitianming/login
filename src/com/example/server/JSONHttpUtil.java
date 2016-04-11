@@ -15,11 +15,10 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class JSONHttpUtil {
-	String Response = "";
-	JSONObject jsonParam = new JSONObject();
-	public static String baseIp = "192.168.1.106";
-//	public static String urlStr = "http://yukiy.sinaapp.com//MyServersText/HelloWorld";
-	public static String urlStr = "http://yukiy.sinaapp.com/HelloWorld";
+	private String Response = "";
+	private JSONObject jsonParam = new JSONObject();
+	public static String baseIp = "114.215.95.214";
+	public static String urlStr = "http://114.215.95.214/MyServersText/HelloWorld";
 
 	/**
 	 * 发送
@@ -39,11 +38,11 @@ public class JSONHttpUtil {
 			HttpResponse httpResponse;
 			httpResponse = new DefaultHttpClient().execute(post);
 
-			Log.e("post", "正在请求");
+			Log.e("post", jsonObject.toString());
 			if (httpResponse.getStatusLine().getStatusCode() == 200) {
 				String string = EntityUtils.toString(httpResponse.getEntity());
 				object = new JSONObject(string);
-				Log.e("httpResponse", "发送成功");
+				Log.e("发送成功", string);
 			} else {
 				Log.e("httpResponse", "连接失败");
 			}
@@ -59,7 +58,6 @@ public class JSONHttpUtil {
 		}
 
 		return object;
-
 	}
 
 	/**
@@ -125,7 +123,6 @@ public class JSONHttpUtil {
 			jsonParam.put("message", object);
 
 			object = send(jsonParam);
-			
 			
 			if (object.getString("object").equals("getAllUsersName")) {
 				JSONObject jsonObject = new JSONObject(object.getString("message"));

@@ -5,23 +5,18 @@ import com.example.login.R;
 import com.example.main.ChatActivity;
 import com.example.main.MainActivity;
 import com.example.server.JSONHttpUtil;
+import com.example.util.BitmapCircular;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Bitmap.Config;
-import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,15 +42,15 @@ public class MainView1 extends Fragment {
 	private String[] Names;
 	private ListView listView;
 	private MyAdapter myAdapter;
-	Message msg;
+	private Message msg;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.main_view1, container, false);
 
-		initTitleView();
-		initDragLayout();
+		initTitleView(); // 上方菜单
+		initDragLayout(); // 单击打开滑动界面
 		
 		initView(); // 初始化控件
 		getAllUsersName(); // 获取该账号的所有好友
@@ -120,7 +115,7 @@ public class MainView1 extends Fragment {
 		// 标题栏头像
 		Bitmap Resources = BitmapFactory.decodeResource(getResources(),
 				R.drawable.p6_1);
-		Bitmap bitmap = setCircular(Resources, 200);
+		Bitmap bitmap = new BitmapCircular().setCircular(Resources, 200.0f);
 		view1_title_picure.setImageBitmap(bitmap);
 
 		// 左侧
@@ -140,28 +135,6 @@ public class MainView1 extends Fragment {
 		});
 	}
 
-	// 设置圆形头像
-	public static Bitmap setCircular(Bitmap bitmap, float pixels) {
-		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-				bitmap.getHeight(), Config.ARGB_8888);
-
-		Canvas canvas = new Canvas(output);
-		final Paint paint = new Paint();
-		final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-		final RectF rectF = new RectF(rect);
-		final float roundPx = pixels;
-
-		paint.setAntiAlias(true);
-		paint.setColor(0xff424242);
-
-		canvas.drawARGB(0, 0, 0, 0);
-		canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-		canvas.drawBitmap(bitmap, rect, rect, paint);
-
-		return output;
-	}
-
 	// 实例化接口
 	@Override
 	public void onAttach(Activity activity) {
@@ -178,8 +151,6 @@ public class MainView1 extends Fragment {
 	public void initView() {
 		listView = (ListView) rootView.findViewById(R.id.view1_list);
 		listView.setOnItemClickListener(new ListItemClickListener());
-		
-		
 	}
 	
 	// 打开聊天界面
@@ -264,6 +235,10 @@ public class MainView1 extends Fragment {
 				String Response = "";
 				Response = new JSONHttpUtil().getUsersName(MainActivity.name);
 				Names = Response.split("/");
+				
+				if (Names[0].equals("")) {
+					Names = new String[0];
+				}
 				
 				msg = new Message();
 				msg.what = 1;

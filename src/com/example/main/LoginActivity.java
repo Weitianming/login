@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.example.database.InfoDataBase;
+import com.example.database.LoginDataBase;
 import com.example.dialog.RegisterDialog;
 import com.example.login.R;
 import com.example.server.JSONHttpUtil;
+import com.example.util.BitmapCircular;
 import com.example.view.HorizontalListView;
 
 import android.annotation.SuppressLint;
@@ -23,13 +24,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Bitmap.Config;
-import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -101,7 +95,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		SP(); // 本地存储
 		BitmapCircular(); // 头像圆形处理
 
-		db = new InfoDataBase(LoginActivity.this).getReadableDatabase();
+		db = new LoginDataBase(LoginActivity.this).getReadableDatabase();
 		InfoCursor = db.query("InfoTable", null, null, null, null, null, null);
 
 		account.setSelection(account.getText().length()); // 光标移至最后
@@ -190,14 +184,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 	public void BitmapCircular() {
 		Bitmap Resources = BitmapFactory.decodeResource(getResources(),
 				R.drawable.head);
-		Bitmap bitmap = setCircular(Resources, 200.0f);
+		Bitmap bitmap = new BitmapCircular().setCircular(Resources, 200.0f);
 		head.setImageBitmap(bitmap);
 	}
 
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		db = new InfoDataBase(LoginActivity.this).getReadableDatabase();
+		db = new LoginDataBase(LoginActivity.this).getReadableDatabase();
 		InfoCursor = db.query("InfoTable", null, null, null, null, null, null);
 	}
 
@@ -416,7 +410,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			Bitmap Resources = BitmapFactory.decodeResource(getResources(),
 					R.drawable.p3);
-			Bitmap bitmap = setCircular(Resources, 220.0f);
+			Bitmap bitmap = new BitmapCircular().setCircular(Resources, 220.0f);
 			list_image.setImageBitmap(bitmap);
 
 			return convertView;
@@ -470,28 +464,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		}
 	};
-
-	// 处理头像形状
-	public static Bitmap setCircular(Bitmap bitmap, float pixels) {
-		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-				bitmap.getHeight(), Config.ARGB_8888);
-
-		Canvas canvas = new Canvas(output);
-		final Paint paint = new Paint();
-		final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-		final RectF rectF = new RectF(rect);
-		final float roundPx = pixels;
-
-		paint.setAntiAlias(true);
-		paint.setColor(0xff424242);
-
-		canvas.drawARGB(0, 0, 0, 0);
-		canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-		canvas.drawBitmap(bitmap, rect, rect, paint);
-
-		return output;
-	}
 
 	// 展开列表动画效果
 	public void OpenView() {

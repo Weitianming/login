@@ -64,7 +64,7 @@ public class MainActivity extends FragmentActivity implements IBtnCallListener {
 		sp = getSharedPreferences("info", MODE_PRIVATE);
 		name = sp.getString("name", "");
 
-		new ChatService().start();
+		new ChatService(this).start();
 		
 //		startService(new Intent(MainActivity.this, SearchService.class));
 

@@ -4,13 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class InfoDataBase extends SQLiteOpenHelper {
+public class LoginDataBase extends SQLiteOpenHelper {
 	private static String DATABASE = "info_db";
 	private static String INFOTABLE = "InfoTable";
 	private static String NAME = "name";
 	private static String PWD = "pwd";
 
-	public InfoDataBase(Context context) {
+	public LoginDataBase(Context context) {
 		super(context, DATABASE, null, 1);
 	}
 
